@@ -1,0 +1,20 @@
+## .NET build output
+bin/
+obj/
+[Dd]ebug/
+[Rr]elease/
+*.user
+project.lock.json
+artifacts/
+
+## Rider / Visual Studio
+.idea/
+.vs/
+*.suo
+
+## Local environment (contains credentials)
+.env
+
+## OS
+.DS_Store
+Thumbs.db
