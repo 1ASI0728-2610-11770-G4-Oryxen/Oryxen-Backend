@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Oryxen.API/Oryxen.API.csproj" />
+    <Project Path="src/Oryxen.Application/Oryxen.Application.csproj" />
+    <Project Path="src/Oryxen.Domain/Oryxen.Domain.csproj" />
+    <Project Path="src/Oryxen.Infrastructure/Oryxen.Infrastructure.csproj" />
+  </Folder>
+</Solution>

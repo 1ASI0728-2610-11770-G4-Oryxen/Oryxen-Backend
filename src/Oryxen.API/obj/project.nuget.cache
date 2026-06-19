@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "vm6v6PyZUW4=",
+  "success": true,
+  "projectFilePath": "D:\\Dev\\Proyectos\\Oryxen\\Oryxen-Backend\\src\\Oryxen.API\\Oryxen.API.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\abrah\\.nuget\\packages\\microsoft.aspnetcore.openapi\\10.0.9\\microsoft.aspnetcore.openapi.10.0.9.nupkg.sha512",
+    "C:\\Users\\abrah\\.nuget\\packages\\microsoft.openapi\\2.0.0\\microsoft.openapi.2.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}

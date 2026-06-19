@@ -1,0 +1,6 @@
+@Oryxen.API_HostAddress = http://localhost:5101
+
+GET {{Oryxen.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
