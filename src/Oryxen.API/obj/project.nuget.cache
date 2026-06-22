@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "cXixe2Q+yb8=",
+  "dgSpecHash": "sJaD6eCesPM=",
   "success": true,
   "projectFilePath": "D:\\Dev\\Proyectos\\Oryxen\\Oryxen-Backend\\src\\Oryxen.API\\Oryxen.API.csproj",
   "expectedPackageFiles": [
@@ -62,7 +62,11 @@
     "C:\\Users\\abrah\\.nuget\\packages\\system.reflection.metadata\\7.0.0\\system.reflection.metadata.7.0.0.nupkg.sha512",
     "C:\\Users\\abrah\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\6.0.0\\system.runtime.compilerservices.unsafe.6.0.0.nupkg.sha512",
     "C:\\Users\\abrah\\.nuget\\packages\\system.text.json\\9.0.10\\system.text.json.9.0.10.nupkg.sha512",
-    "C:\\Users\\abrah\\.nuget\\packages\\system.threading.channels\\7.0.0\\system.threading.channels.7.0.0.nupkg.sha512"
+    "C:\\Users\\abrah\\.nuget\\packages\\system.threading.channels\\7.0.0\\system.threading.channels.7.0.0.nupkg.sha512",
+    "C:\\Users\\abrah\\.nuget\\packages\\microsoft.netcore.app.ref\\9.0.17\\microsoft.netcore.app.ref.9.0.17.nupkg.sha512",
+    "C:\\Users\\abrah\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\9.0.17\\microsoft.windowsdesktop.app.ref.9.0.17.nupkg.sha512",
+    "C:\\Users\\abrah\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\9.0.17\\microsoft.aspnetcore.app.ref.9.0.17.nupkg.sha512",
+    "C:\\Users\\abrah\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\9.0.17\\microsoft.netcore.app.host.win-x64.9.0.17.nupkg.sha512"
   ],
   "logs": []
 }
