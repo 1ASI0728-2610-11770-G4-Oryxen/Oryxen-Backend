@@ -23,5 +23,8 @@ public sealed class SubscriptionConfiguration : IEntityTypeConfiguration<Subscri
             .IsRequired();
 
         builder.HasIndex(s => s.UserAccountId).IsUnique();
+
+        builder.Property(s => s.StripeCustomerId).HasMaxLength(120);
+        builder.Property(s => s.StripeSubscriptionId).HasMaxLength(120);
     }
 }

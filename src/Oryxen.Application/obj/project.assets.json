@@ -1,8 +1,6 @@
 {
-  "version": 4,
+  "version": 3,
   "targets": {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
     "net9.0": {
       "Microsoft.Extensions.DependencyInjection.Abstractions/9.0.10": {
         "type": "package",
@@ -23,17 +21,6 @@
       "Oryxen.Domain/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v9.0",
-=======
-=======
->>>>>>> Stashed changes
-    "net10.0": {
-      "Oryxen.Domain/1.0.0": {
-        "type": "project",
-        "framework": ".NETCoreApp,Version=v10.0",
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
         "compile": {
           "bin/placeholder/Oryxen.Domain.dll": {}
         },
@@ -44,8 +31,6 @@
     }
   },
   "libraries": {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
     "Microsoft.Extensions.DependencyInjection.Abstractions/9.0.10": {
       "sha512": "r9waLiOPe9ZF1PvzUT+RDoHvpMmY8MW+lb4lqjYGObwKpnyPMLI3odVvlmshwuZcdoHynsGWOrCPA0hxZ63lIA==",
       "type": "package",
@@ -76,10 +61,6 @@
         "useSharedDesignerContext.txt"
       ]
     },
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
     "Oryxen.Domain/1.0.0": {
       "type": "project",
       "path": "../Oryxen.Domain/Oryxen.Domain.csproj",
@@ -87,16 +68,8 @@
     }
   },
   "projectFileDependencyGroups": {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
     "net9.0": [
       "Microsoft.Extensions.DependencyInjection.Abstractions >= 9.0.10",
-=======
-    "net10.0": [
->>>>>>> Stashed changes
-=======
-    "net10.0": [
->>>>>>> Stashed changes
       "Oryxen.Domain >= 1.0.0"
     ]
   },
@@ -130,18 +103,8 @@
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
-<<<<<<< Updated upstream
         "net9.0": {
-          "framework": "net9.0",
           "targetAlias": "net9.0",
-=======
-        "net10.0": {
-          "framework": "net10.0",
-          "targetAlias": "net10.0",
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
           "projectReferences": {
             "D:\\Dev\\Proyectos\\Oryxen\\Oryxen-Backend\\src\\Oryxen.Domain\\Oryxen.Domain.csproj": {
               "projectPath": "D:\\Dev\\Proyectos\\Oryxen\\Oryxen-Backend\\src\\Oryxen.Domain\\Oryxen.Domain.csproj"
@@ -159,11 +122,10 @@
         "auditLevel": "low",
         "auditMode": "direct"
       },
-      "SdkAnalysisLevel": "10.0.300"
+      "SdkAnalysisLevel": "9.0.300"
     },
     "frameworks": {
       "net9.0": {
-        "framework": "net9.0",
         "targetAlias": "net9.0",
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection.Abstractions": {
@@ -182,35 +144,13 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
-        "downloadDependencies": [
-          {
-            "name": "Microsoft.AspNetCore.App.Ref",
-            "version": "[9.0.17, 9.0.17]"
-          },
-          {
-            "name": "Microsoft.NETCore.App.Ref",
-            "version": "[9.0.17, 9.0.17]"
-          },
-          {
-            "name": "Microsoft.WindowsDesktop.App.Ref",
-            "version": "[9.0.17, 9.0.17]"
-          }
-        ],
         "frameworkReferences": {
           "Microsoft.NETCore.App": {
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.301/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.308/PortableRuntimeIdentifierGraph.json"
       }
     }
-  },
-  "logs": [
-    {
-      "code": "Undefined",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Problema al leer el archivo de caché D:\\Dev\\Proyectos\\Oryxen\\Oryxen-Backend\\src\\Oryxen.Application\\obj\\project.nuget.cache : '<' is an invalid start of a property name. Expected a '\"'. Path: $ | LineNumber: 2 | BytePositionInLine: 0."
-    }
-  ]
+  }
 }
