@@ -1,6 +1,10 @@
 {
   "version": 2,
+<<<<<<< Updated upstream
   "dgSpecHash": "QL/f7Q7ohXg=",
+=======
+  "dgSpecHash": "bg5DxS10KGw=",
+>>>>>>> Stashed changes
   "success": true,
   "projectFilePath": "D:\\Dev\\Proyectos\\Oryxen\\Oryxen-Backend\\src\\Oryxen.Application\\Oryxen.Application.csproj",
   "expectedPackageFiles": [

@@ -1,6 +1,7 @@
 {
   "version": 4,
   "targets": {
+<<<<<<< Updated upstream
     "net9.0": {
       "BCrypt.Net-Next/4.0.3": {
         "type": "package",
@@ -1153,6 +1154,13 @@
         "framework": ".NETCoreApp,Version=v9.0",
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.10",
+=======
+    "net10.0": {
+      "Oryxen.Application/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v10.0",
+        "dependencies": {
+>>>>>>> Stashed changes
           "Oryxen.Domain": "1.0.0"
         },
         "compile": {
@@ -1164,7 +1172,11 @@
       },
       "Oryxen.Domain/1.0.0": {
         "type": "project",
+<<<<<<< Updated upstream
         "framework": ".NETCoreApp,Version=v9.0",
+=======
+        "framework": ".NETCoreApp,Version=v10.0",
+>>>>>>> Stashed changes
         "compile": {
           "bin/placeholder/Oryxen.Domain.dll": {}
         },
@@ -1175,6 +1187,7 @@
     }
   },
   "libraries": {
+<<<<<<< Updated upstream
     "BCrypt.Net-Next/4.0.3": {
       "sha512": "W+U9WvmZQgi5cX6FS5GDtDoPzUCV4LkBLkywq/kRZhuDwcbavOzcDAr3LXJFqHUi952Yj3LEYoWW0jbEUQChsA==",
       "type": "package",
@@ -3388,6 +3401,8 @@
         "useSharedDesignerContext.txt"
       ]
     },
+=======
+>>>>>>> Stashed changes
     "Oryxen.Application/1.0.0": {
       "type": "project",
       "path": "../Oryxen.Application/Oryxen.Application.csproj",
@@ -3400,6 +3415,7 @@
     }
   },
   "projectFileDependencyGroups": {
+<<<<<<< Updated upstream
     "net9.0": [
       "BCrypt.Net-Next >= 4.0.3",
       "Microsoft.EntityFrameworkCore >= 9.0.10",
@@ -3412,6 +3428,10 @@
       "Npgsql.EntityFrameworkCore.PostgreSQL >= 9.0.4",
       "Oryxen.Application >= 1.0.0",
       "System.IdentityModel.Tokens.Jwt >= 8.1.2"
+=======
+    "net10.0": [
+      "Oryxen.Application >= 1.0.0"
+>>>>>>> Stashed changes
     ]
   },
   "packageFolders": {
@@ -3444,9 +3464,15 @@
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
+<<<<<<< Updated upstream
         "net9.0": {
           "framework": "net9.0",
           "targetAlias": "net9.0",
+=======
+        "net10.0": {
+          "framework": "net10.0",
+          "targetAlias": "net10.0",
+>>>>>>> Stashed changes
           "projectReferences": {
             "D:\\Dev\\Proyectos\\Oryxen\\Oryxen-Backend\\src\\Oryxen.Application\\Oryxen.Application.csproj": {
               "projectPath": "D:\\Dev\\Proyectos\\Oryxen\\Oryxen-Backend\\src\\Oryxen.Application\\Oryxen.Application.csproj"
