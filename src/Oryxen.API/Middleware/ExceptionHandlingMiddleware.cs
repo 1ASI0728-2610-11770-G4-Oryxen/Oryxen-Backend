@@ -37,6 +37,8 @@ public sealed class ExceptionHandlingMiddleware
             EmailAlreadyExistsException => (StatusCodes.Status409Conflict, exception.Message),
             InvalidCredentialsException => (StatusCodes.Status401Unauthorized, exception.Message),
             InvalidRefreshTokenException => (StatusCodes.Status401Unauthorized, exception.Message),
+            PlantNotFoundException => (StatusCodes.Status404NotFound, exception.Message),
+            ExternalServiceException => (StatusCodes.Status502BadGateway, exception.Message),
             _ => (StatusCodes.Status500InternalServerError, "An unexpected error occurred.")
         };
 

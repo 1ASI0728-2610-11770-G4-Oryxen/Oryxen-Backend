@@ -1,5 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Oryxen.Application.Auth;
+using Oryxen.Application.Plants;
 using Oryxen.Application.Telemetry;
 
 namespace Oryxen.Application;
@@ -11,6 +12,7 @@ public static class DependencyInjection
     {
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<ITelemetryService, TelemetryService>();
+        services.AddScoped<IPlantService, PlantService>();
 
         return services;
     }
