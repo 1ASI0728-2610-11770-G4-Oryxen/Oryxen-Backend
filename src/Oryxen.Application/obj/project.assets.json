@@ -2,6 +2,7 @@
   "version": 4,
   "targets": {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     "net9.0": {
       "Microsoft.Extensions.DependencyInjection.Abstractions/9.0.10": {
         "type": "package",
@@ -23,10 +24,15 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v9.0",
 =======
+=======
+>>>>>>> Stashed changes
     "net10.0": {
       "Oryxen.Domain/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v10.0",
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         "compile": {
           "bin/placeholder/Oryxen.Domain.dll": {}
@@ -38,6 +44,7 @@
     }
   },
   "libraries": {
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
     "Microsoft.Extensions.DependencyInjection.Abstractions/9.0.10": {
       "sha512": "r9waLiOPe9ZF1PvzUT+RDoHvpMmY8MW+lb4lqjYGObwKpnyPMLI3odVvlmshwuZcdoHynsGWOrCPA0hxZ63lIA==",
@@ -71,6 +78,8 @@
     },
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
     "Oryxen.Domain/1.0.0": {
       "type": "project",
       "path": "../Oryxen.Domain/Oryxen.Domain.csproj",
@@ -79,8 +88,12 @@
   },
   "projectFileDependencyGroups": {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     "net9.0": [
       "Microsoft.Extensions.DependencyInjection.Abstractions >= 9.0.10",
+=======
+    "net10.0": [
+>>>>>>> Stashed changes
 =======
     "net10.0": [
 >>>>>>> Stashed changes
@@ -125,6 +138,9 @@
         "net10.0": {
           "framework": "net10.0",
           "targetAlias": "net10.0",
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
           "projectReferences": {
             "D:\\Dev\\Proyectos\\Oryxen\\Oryxen-Backend\\src\\Oryxen.Domain\\Oryxen.Domain.csproj": {

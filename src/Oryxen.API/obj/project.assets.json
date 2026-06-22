@@ -1371,6 +1371,42 @@
         "runtime": {
           "bin/placeholder/Oryxen.Infrastructure.dll": {}
         }
+      },
+      "Oryxen.Application/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v10.0",
+        "dependencies": {
+          "Oryxen.Domain": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Oryxen.Application.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Oryxen.Application.dll": {}
+        }
+      },
+      "Oryxen.Domain/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v10.0",
+        "compile": {
+          "bin/placeholder/Oryxen.Domain.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Oryxen.Domain.dll": {}
+        }
+      },
+      "Oryxen.Infrastructure/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v10.0",
+        "dependencies": {
+          "Oryxen.Application": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Oryxen.Infrastructure.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Oryxen.Infrastructure.dll": {}
+        }
       }
     }
   },
@@ -3436,6 +3472,7 @@
       ]
     },
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     "Mono.TextTemplating/3.0.0": {
       "sha512": "YqueG52R/Xej4VVbKuRIodjiAhV0HR/XVbLbNrJhCZnzjnSjgMJ/dCdV0akQQxavX6hp/LC6rqLGLcXeQYU7XA==",
       "type": "package",
@@ -3985,6 +4022,8 @@
     },
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
     "Oryxen.Application/1.0.0": {
       "type": "project",
       "path": "../Oryxen.Application/Oryxen.Application.csproj",
@@ -4014,6 +4053,9 @@
       "Microsoft.AspNetCore.OpenApi >= 10.0.9",
       "Oryxen.Application >= 1.0.0",
       "Oryxen.Infrastructure >= 1.0.0"
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
     ]
   },
@@ -4055,6 +4097,9 @@
         "net10.0": {
           "framework": "net10.0",
           "targetAlias": "net10.0",
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
           "projectReferences": {
             "D:\\Dev\\Proyectos\\Oryxen\\Oryxen-Backend\\src\\Oryxen.Application\\Oryxen.Application.csproj": {
