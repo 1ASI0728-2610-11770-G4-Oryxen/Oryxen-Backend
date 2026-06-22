@@ -26,7 +26,7 @@ public sealed class GeminiVisionService : IMultimodalAiService
         sensor telemetry to diagnose the overall health of the plant.
 
         Examine the image for visual signs on leaves, stems, flowers and fruits:
-        discoloration, spots, wilting, chewed edges, holes, larvae, fungal growth,
+        discoloration, spots, wilting, chewed edges, holes, fungal growth,
         nutrient deficiency symptoms, or any other anomaly.
 
         Recent Sensor Lite telemetry for this plant:
