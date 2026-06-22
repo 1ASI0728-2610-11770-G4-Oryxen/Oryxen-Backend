@@ -5,4 +5,8 @@
     <Project Path="src/Oryxen.Domain/Oryxen.Domain.csproj" />
     <Project Path="src/Oryxen.Infrastructure/Oryxen.Infrastructure.csproj" />
   </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Oryxen.Domain.Tests/Oryxen.Domain.Tests.csproj" />
+    <Project Path="tests/Oryxen.Application.Tests/Oryxen.Application.Tests.csproj" />
+  </Folder>
 </Solution>
