@@ -7,7 +7,7 @@ namespace Oryxen.API.Controllers;
 
 [ApiController]
 [Route("api/v1/notifications")]
-[Authorize]
+[Authorize(Roles = "FARMER,ADMIN")]
 public class NotificationsController : ControllerBase
 {
     private readonly INotificationService _notificationService;
@@ -31,8 +31,15 @@ public class NotificationsController : ControllerBase
         return Ok(new { count });
     }
 
-    [HttpPost("{id:guid}/read")]
+    [HttpPatch("{id:guid}/read")]
     public async Task<IActionResult> MarkAsRead(Guid id, CancellationToken cancellationToken)
+    {
+        await _notificationService.MarkAsReadAsync(id, cancellationToken);
+        return NoContent();
+    }
+
+    [HttpPost("{id:guid}/read")]
+    public async Task<IActionResult> MarkAsReadLegacy(Guid id, CancellationToken cancellationToken)
     {
         await _notificationService.MarkAsReadAsync(id, cancellationToken);
         return NoContent();

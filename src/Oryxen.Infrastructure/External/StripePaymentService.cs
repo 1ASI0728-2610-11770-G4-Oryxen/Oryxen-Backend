@@ -32,6 +32,7 @@ public sealed class StripePaymentService : IPaymentPlatformService
         string successUrl,
         string cancelUrl,
         string customerEmail,
+        string clientReferenceId,
         CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(_settings.SecretKey))
@@ -46,6 +47,7 @@ public sealed class StripePaymentService : IPaymentPlatformService
             .Add("success_url", successUrl)
             .Add("cancel_url", cancelUrl)
             .Add("customer_email", customerEmail)
+            .Add("client_reference_id", clientReferenceId)
             .Add("line_items[0][quantity]", "1")
             .Add("line_items[0][price_data][currency]", currency.ToLowerInvariant())
             .Add("line_items[0][price_data][unit_amount]", unitAmount.ToString())
@@ -98,6 +100,7 @@ public sealed class StripePaymentService : IPaymentPlatformService
 
             string? subscriptionId = null;
             string? customerId = null;
+            string? clientReferenceId = null;
             string? transactionId = null;
             decimal? amount = null;
             string? currency = null;
@@ -106,6 +109,7 @@ public sealed class StripePaymentService : IPaymentPlatformService
             {
                 subscriptionId = obj.TryGetProperty("subscription", out var sub) ? sub.GetString() : null;
                 customerId = obj.TryGetProperty("customer", out var cust) ? cust.GetString() : null;
+                clientReferenceId = obj.TryGetProperty("client_reference_id", out var refId) ? refId.GetString() : null;
                 transactionId = obj.TryGetProperty("payment_intent", out var pi) ? pi.GetString() : null;
 
                 if (obj.TryGetProperty("amount_total", out var amt))
@@ -119,7 +123,7 @@ public sealed class StripePaymentService : IPaymentPlatformService
             }
 
             return Task.FromResult<WebhookEventResult?>(new WebhookEventResult(
-                eventType, subscriptionId, customerId, transactionId, amount, currency));
+                eventType, subscriptionId, customerId, clientReferenceId, transactionId, amount, currency));
         }
         catch (JsonException)
         {

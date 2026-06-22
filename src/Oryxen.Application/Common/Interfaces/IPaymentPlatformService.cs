@@ -15,6 +15,7 @@ public interface IPaymentPlatformService
         string successUrl,
         string cancelUrl,
         string customerEmail,
+        string clientReferenceId,
         CancellationToken cancellationToken = default);
 
     /// <summary>Verifies and parses a Stripe webhook payload. Returns the event type or null if invalid.</summary>
@@ -34,6 +35,7 @@ public sealed record WebhookEventResult(
     string EventType,
     string? SubscriptionId,
     string? CustomerId,
+    string? ClientReferenceId,
     string? TransactionId,
     decimal? Amount,
     string? Currency);

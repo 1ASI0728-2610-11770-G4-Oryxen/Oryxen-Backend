@@ -55,6 +55,7 @@ public sealed class SubscriptionService : ISubscriptionService
             successUrl,
             cancelUrl,
             user.Email,
+            userAccountId.ToString(),
             cancellationToken);
 
         return new CheckoutResponse(session.SessionId, session.CheckoutUrl);
@@ -65,16 +66,28 @@ public sealed class SubscriptionService : ISubscriptionService
         var evt = await _paymentPlatform.ParseWebhookAsync(payload, signature, cancellationToken);
         if (evt is null) return;
 
-        if (evt.EventType == "checkout.session.completed" && evt.CustomerId is not null)
+        if (evt.EventType == "checkout.session.completed")
         {
-            var user = await FindUserByStripeCustomerId(evt.CustomerId, cancellationToken);
+            UserAccount? user = null;
+
+            if (!string.IsNullOrWhiteSpace(evt.ClientReferenceId)
+                && Guid.TryParse(evt.ClientReferenceId, out var userId))
+            {
+                user = await _users.GetByIdAsync(userId, cancellationToken);
+            }
+
+            if (user is null && !string.IsNullOrWhiteSpace(evt.CustomerId))
+            {
+                user = await _users.GetByStripeCustomerIdAsync(evt.CustomerId, cancellationToken);
+            }
+
             if (user?.Subscription is null) return;
 
             user.Subscription.Plan = SubscriptionPlan.Premium;
             user.Subscription.Status = SubscriptionStatus.Active;
             user.Subscription.NextBillingDate = DateTime.UtcNow.AddMonths(1);
-            user.Subscription.StripeSubscriptionId = evt.SubscriptionId;
             user.Subscription.StripeCustomerId = evt.CustomerId;
+            user.Subscription.StripeSubscriptionId = evt.SubscriptionId;
 
             var payment = new Payment
             {
@@ -106,11 +119,5 @@ public sealed class SubscriptionService : ISubscriptionService
         return new SubscriptionResponse(
             s.Id, s.UserAccountId, s.Plan.ToString(), s.Status.ToString(),
             s.StartedAt, s.ExpiresAt, s.NextBillingDate, s.CanceledAt);
-    }
-
-    private async Task<UserAccount?> FindUserByStripeCustomerId(string customerId, CancellationToken ct)
-    {
-        var allUsers = await _users.GetByEmailAsync("__stripe_lookup__", ct);
-        return null;
     }
 }

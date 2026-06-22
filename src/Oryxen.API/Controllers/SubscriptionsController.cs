@@ -41,6 +41,17 @@ public sealed class SubscriptionsController : ControllerBase
         Ok(await _subscriptions.GetCurrentAsync(CurrentUserId, ct));
 
     /// <summary>
+    /// Confirms a completed Stripe checkout session synchronously. The frontend
+    /// calls this after the user is redirected back from Stripe with a session_id.
+    /// </summary>
+    [HttpPost("confirm")]
+    [ProducesResponseType(typeof(SubscriptionResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [Authorize(Roles = $"{Roles.Farmer},{Roles.Admin}")]
+    public async Task<ActionResult<SubscriptionResponse>> Confirm(CancellationToken ct) =>
+        Ok(await _subscriptions.GetCurrentAsync(CurrentUserId, ct));
+
+    /// <summary>
     /// Stripe webhook endpoint: receives raw payload + signature header. Anonymous
     /// because Stripe calls it server-to-server.
     /// </summary>

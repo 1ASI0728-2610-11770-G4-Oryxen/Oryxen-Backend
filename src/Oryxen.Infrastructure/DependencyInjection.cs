@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Oryxen.Application.Common.Interfaces;
+using Oryxen.Application.Community;
 using Oryxen.Domain.Repositories;
 using Oryxen.Application.Notifications;
 using Oryxen.Infrastructure.External;
@@ -41,6 +42,9 @@ public static class DependencyInjection
         // ---- Notification Bounded Context ------------------------------------
         services.AddScoped<INotificationRepository, NotificationRepository>();
         services.AddScoped<INotificationService, NotificationService>();
+        services.AddScoped<ICommunityRepository, CommunityRepository>();
+        services.AddScoped<IAnalysisReportRepository, AnalysisReportRepository>();
+        services.AddSingleton<IImageMetadataSanitizer, ImageMetadataSanitizer>();
         services.AddScoped<IEmailService, SendGridEmailService>();
         services.AddScoped<IPushNotificationService, FirebaseFcmService>();
 
