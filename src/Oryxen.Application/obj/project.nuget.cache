@@ -1,10 +1,23 @@
 {
   "version": 2,
-  "dgSpecHash": "hYpEf4zesWU=",
+  "dgSpecHash": "QL/f7Q7ohXg=",
   "success": true,
   "projectFilePath": "D:\\Dev\\Proyectos\\Oryxen\\Oryxen-Backend\\src\\Oryxen.Application\\Oryxen.Application.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\abrah\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\9.0.10\\microsoft.extensions.dependencyinjection.abstractions.9.0.10.nupkg.sha512"
+    "C:\\Users\\abrah\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\9.0.10\\microsoft.extensions.dependencyinjection.abstractions.9.0.10.nupkg.sha512",
+    "C:\\Users\\abrah\\.nuget\\packages\\microsoft.netcore.app.ref\\9.0.17\\microsoft.netcore.app.ref.9.0.17.nupkg.sha512",
+    "C:\\Users\\abrah\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\9.0.17\\microsoft.windowsdesktop.app.ref.9.0.17.nupkg.sha512",
+    "C:\\Users\\abrah\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\9.0.17\\microsoft.aspnetcore.app.ref.9.0.17.nupkg.sha512"
   ],
-  "logs": []
+  "logs": [
+    {
+      "code": "Undefined",
+      "level": "Warning",
+      "message": "Problema al leer el archivo de caché D:\\Dev\\Proyectos\\Oryxen\\Oryxen-Backend\\src\\Oryxen.Application\\obj\\project.nuget.cache : '<' is an invalid start of a property name. Expected a '\"'. Path: $ | LineNumber: 2 | BytePositionInLine: 0.",
+      "projectPath": "D:\\Dev\\Proyectos\\Oryxen\\Oryxen-Backend\\src\\Oryxen.Application\\Oryxen.Application.csproj",
+      "warningLevel": 1,
+      "filePath": "D:\\Dev\\Proyectos\\Oryxen\\Oryxen-Backend\\src\\Oryxen.Application\\Oryxen.Application.csproj",
+      "targetGraphs": []
+    }
+  ]
 }
