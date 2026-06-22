@@ -1,4 +1,3 @@
-using System.Text.RegularExpressions;
 using Oryxen.Application.Common.Interfaces;
 
 namespace Oryxen.Infrastructure.Security;
@@ -6,8 +5,6 @@ namespace Oryxen.Infrastructure.Security;
 public sealed class ImageMetadataSanitizer : IImageMetadataSanitizer
 {
     private static readonly byte[] ExifHeader = [0x45, 0x78, 0x69, 0x66, 0x00, 0x00];
-
-    private static readonly byte[] GpsIfdTag = [0x88, 0x25];
 
     public Stream StripExifMetadata(Stream imageStream)
     {

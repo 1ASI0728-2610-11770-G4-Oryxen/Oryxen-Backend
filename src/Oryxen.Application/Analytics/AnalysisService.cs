@@ -2,6 +2,7 @@ using Oryxen.Application.Analytics.Contracts;
 using Oryxen.Domain.Entities;
 using Oryxen.Domain.Enums;
 using Oryxen.Domain.Repositories;
+using Oryxen.Domain.ValueObjects;
 
 namespace Oryxen.Application.Analytics;
 
@@ -23,70 +24,32 @@ public sealed class AnalysisService : IAnalysisService
 
     public async Task<DashboardResponse> GetDashboardAsync(Guid userAccountId, CancellationToken cancellationToken = default)
     {
-        var plants = await _plantRepository.GetByUserAsync(userAccountId, cancellationToken);
-        var plantList = plants.ToList();
+        var since = DateTime.UtcNow.AddDays(-30);
+        var metrics = await _reportRepository.GetDashboardMetricsAsync(userAccountId, since, cancellationToken);
+        var metricList = metrics.ToList();
 
-        if (plantList.Count == 0)
-        {
-            return new DashboardResponse(
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                Array.Empty<PlantHealthSummary>());
-        }
+        if (metricList.Count == 0)
+            return new DashboardResponse(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, Array.Empty<PlantHealthSummary>());
 
-        var summaries = new List<PlantHealthSummary>();
-        double totalHumidity = 0, totalTemperature = 0, totalSoilMoisture = 0, totalLight = 0, totalHealth = 0;
-        int totalReadings = 0, healthy = 0, warning = 0, critical = 0;
+        var withData = metricList.Where(m => m.ReadingCount > 0).ToList();
+        var count = withData.Count == 0 ? 1 : withData.Count;
 
-        foreach (var plant in plantList)
-        {
-            var readings = await _telemetryRepository.GetByPlantAsync(
-                plant.Id, DateTime.UtcNow.AddDays(-30), null, cancellationToken);
+        var summaries = metricList.Select(m => new PlantHealthSummary(
+            m.PlantId, m.PlantName, m.PlantType, m.Status,
+            m.AvgHealthScore, m.AvgSoilMoisture, m.ReadingCount, m.LastReadingAt)).ToList();
 
-            var readingList = readings.ToList();
-
-            if (readingList.Count == 0)
-            {
-                summaries.Add(new PlantHealthSummary(
-                    plant.Id, plant.Name, plant.Type,
-                    plant.Status.ToString().ToLowerInvariant(),
-                    0, 0, 0, null));
-                continue;
-            }
-
-            var avgHealth = readingList.Average(r => r.HealthScore);
-            var avgSoil = readingList.Average(r => r.SoilMoisture);
-
-            summaries.Add(new PlantHealthSummary(
-                plant.Id, plant.Name, plant.Type,
-                plant.Status.ToString().ToLowerInvariant(),
-                Math.Round(avgHealth, 1),
-                Math.Round(avgSoil, 1),
-                readingList.Count,
-                readingList.Max(r => r.RecordedAt)));
-
-            totalHumidity += readingList.Average(r => r.Humidity);
-            totalTemperature += readingList.Average(r => r.Temperature);
-            totalSoilMoisture += avgSoil;
-            totalLight += readingList.Average(r => r.LightLevel);
-            totalHealth += avgHealth;
-            totalReadings += readingList.Count;
-        }
-
-        healthy = plantList.Count(p => p.Status == PlantStatus.Healthy);
-        warning = plantList.Count(p => p.Status == PlantStatus.Warning);
-        critical = plantList.Count(p => p.Status == PlantStatus.Critical);
-
-        var plantCount = summaries.Count(s => s.ReadingCount > 0);
-        if (plantCount == 0) plantCount = 1;
+        var healthy = metricList.Count(m => m.Status == "healthy");
+        var warning = metricList.Count(m => m.Status == "warning");
+        var critical = metricList.Count(m => m.Status == "critical");
 
         return new DashboardResponse(
-            plantList.Count, healthy, warning, critical,
-            Math.Round(totalHumidity / plantCount, 1),
-            Math.Round(totalTemperature / plantCount, 1),
-            Math.Round(totalSoilMoisture / plantCount, 1),
-            Math.Round(totalLight / plantCount, 1),
-            Math.Round(totalHealth / plantCount, 1),
-            totalReadings,
+            metricList.Count, healthy, warning, critical,
+            Math.Round(withData.Sum(m => m.AvgHumidity) / count, 1),
+            Math.Round(withData.Sum(m => m.AvgTemperature) / count, 1),
+            Math.Round(withData.Sum(m => m.AvgSoilMoisture) / count, 1),
+            Math.Round(withData.Sum(m => m.AvgLightLevel) / count, 1),
+            Math.Round(withData.Sum(m => m.AvgHealthScore) / count, 1),
+            metricList.Sum(m => m.ReadingCount),
             summaries);
     }
 
@@ -94,50 +57,43 @@ public sealed class AnalysisService : IAnalysisService
     {
         var plant = await _plantRepository.GetByIdAsync(plantId, cancellationToken);
         if (plant is null)
-        {
             return new PlantTrendResponse(plantId, string.Empty,
                 Array.Empty<TrendPoint>(), Array.Empty<TrendPoint>(), Array.Empty<TrendPoint>());
-        }
 
         var now = DateTime.UtcNow;
-        var from = now.AddDays(-90);
 
-        var readings = await _telemetryRepository.GetByPlantAsync(plantId, from, null, cancellationToken);
-        var list = readings.OrderBy(r => r.RecordedAt).ToList();
+        var dailyProjections = await _reportRepository.GetDailyTrendsAsync(plantId, now.AddDays(-7), cancellationToken);
+        var weeklyProjections = await _reportRepository.GetWeeklyTrendsAsync(plantId, now.AddDays(-56), cancellationToken);
+        var monthlyProjections = await _reportRepository.GetMonthlyTrendsAsync(plantId, now.AddMonths(-6), cancellationToken);
 
-        var daily = AggregateByDay(list, now);
-        var weekly = AggregateByWeek(list, now);
-        var monthly = AggregateByMonth(list, now);
+        var daily = dailyProjections.Select(MapTrendPoint).ToList();
+        var weekly = weeklyProjections.Select(MapTrendPoint).ToList();
+        var monthly = monthlyProjections.Select(MapTrendPoint).ToList();
 
         return new PlantTrendResponse(plantId, plant.Name, daily, weekly, monthly);
     }
 
     public async Task<ReportListResponse> GetReportsAsync(
-        Guid userAccountId,
-        Guid? plantId = null,
-        int page = 1,
-        int size = 20,
+        Guid userAccountId, Guid? plantId = null, int page = 1, int size = 20,
         CancellationToken cancellationToken = default)
     {
-        var reports = await _reportRepository.GetByUserAsync(userAccountId, plantId, page, size, cancellationToken);
+        var projections = await _reportRepository.GetReportProjectionsAsync(userAccountId, plantId, page, size, cancellationToken);
         var total = await _reportRepository.CountByUserAsync(userAccountId, plantId, cancellationToken);
 
         var items = new List<ReportItemResponse>();
-        foreach (var r in reports)
+        foreach (var r in projections)
         {
-            string plantName = string.Empty;
+            var plantName = string.Empty;
             try
             {
                 var p = await _plantRepository.GetByIdAsync(r.PlantId, cancellationToken);
                 plantName = p?.Name ?? string.Empty;
             }
-            catch
-            {
-            }
+            catch { }
 
             items.Add(new ReportItemResponse(
                 r.Id, r.PlantId, plantName,
-                r.Type.ToString(), r.Status.ToString(), r.Format.ToString(),
+                r.Type, r.Status, r.Format,
                 r.RangeStart, r.RangeEnd, r.CreatedAt, r.GeneratedAt));
         }
 
@@ -145,8 +101,7 @@ public sealed class AnalysisService : IAnalysisService
     }
 
     public async Task<ReportDetailResponse> GenerateReportAsync(
-        Guid userAccountId,
-        GenerateReportRequest request,
+        Guid userAccountId, GenerateReportRequest request,
         CancellationToken cancellationToken = default)
     {
         var plant = await _plantRepository.GetByIdAsync(request.PlantId, cancellationToken);
@@ -171,11 +126,9 @@ public sealed class AnalysisService : IAnalysisService
             request.PlantId, request.RangeStart, request.RangeEnd, cancellationToken);
         var readingList = readings.ToList();
 
-        var csv = exportFormat == ExportFormat.Csv
-            ? GenerateCsv(readingList)
-            : GenerateJson(readingList);
-
-        report.FileContent = csv;
+        report.FileContent = exportFormat == ExportFormat.Csv
+            ? SerializeCsv(readingList)
+            : SerializeJson(readingList);
         report.Status = ReportStatus.Completed;
         report.GeneratedAt = DateTime.UtcNow;
 
@@ -191,15 +144,13 @@ public sealed class AnalysisService : IAnalysisService
         var report = await _reportRepository.GetByIdAsync(reportId, cancellationToken);
         if (report is null) return null;
 
-        string plantName = string.Empty;
+        var plantName = string.Empty;
         try
         {
             var p = await _plantRepository.GetByIdAsync(report.PlantId, cancellationToken);
             plantName = p?.Name ?? string.Empty;
         }
-        catch
-        {
-        }
+        catch { }
 
         return new ReportDetailResponse(
             report.Id, report.PlantId, plantName,
@@ -208,60 +159,10 @@ public sealed class AnalysisService : IAnalysisService
             report.CreatedAt, report.GeneratedAt);
     }
 
-    private static IReadOnlyList<TrendPoint> AggregateByDay(List<TelemetryData> readings, DateTime now)
-    {
-        var from = now.AddDays(-7);
-        return readings
-            .Where(r => r.RecordedAt >= from)
-            .GroupBy(r => r.RecordedAt.Date)
-            .OrderBy(g => g.Key)
-            .Take(7)
-            .Select(g => BuildTrendPoint(g.ToList(), g.Key.ToString("MMM dd")))
-            .ToList();
-    }
+    private static TrendPoint MapTrendPoint(TrendPointProjection p) =>
+        new(p.Label, p.AvgHealthScore, p.AvgSoilMoisture, p.AvgTemperature, p.AvgHumidity, p.ReadingCount);
 
-    private static IReadOnlyList<TrendPoint> AggregateByWeek(List<TelemetryData> readings, DateTime now)
-    {
-        var from = now.AddDays(-56);
-        return readings
-            .Where(r => r.RecordedAt >= from)
-            .GroupBy(r => GetWeekStart(r.RecordedAt))
-            .OrderBy(g => g.Key)
-            .Take(8)
-            .Select(g => BuildTrendPoint(g.ToList(), $"W{g.Key:MMM dd}"))
-            .ToList();
-    }
-
-    private static IReadOnlyList<TrendPoint> AggregateByMonth(List<TelemetryData> readings, DateTime now)
-    {
-        var from = now.AddMonths(-6);
-        return readings
-            .Where(r => r.RecordedAt >= from)
-            .GroupBy(r => new DateTime(r.RecordedAt.Year, r.RecordedAt.Month, 1))
-            .OrderBy(g => g.Key)
-            .Take(6)
-            .Select(g => BuildTrendPoint(g.ToList(), g.Key.ToString("MMM yyyy")))
-            .ToList();
-    }
-
-    private static TrendPoint BuildTrendPoint(List<TelemetryData> group, string label)
-    {
-        return new TrendPoint(
-            label,
-            Math.Round(group.Average(r => r.HealthScore), 1),
-            Math.Round(group.Average(r => r.SoilMoisture), 1),
-            Math.Round(group.Average(r => r.Temperature), 1),
-            Math.Round(group.Average(r => r.Humidity), 1),
-            group.Count);
-    }
-
-    private static DateTime GetWeekStart(DateTime date)
-    {
-        var diff = (7 + (date.DayOfWeek - DayOfWeek.Monday)) % 7;
-        return date.AddDays(-diff).Date;
-    }
-
-    private static string GenerateCsv(List<TelemetryData> readings)
+    private static string SerializeCsv(IEnumerable<TelemetryData> readings)
     {
         var header = "RecordedAt,DeviceId,HealthScore,SoilMoisture,Temperature,Humidity,LightLevel";
         var rows = readings.Select(r =>
@@ -269,7 +170,7 @@ public sealed class AnalysisService : IAnalysisService
         return string.Join(Environment.NewLine, new[] { header }.Concat(rows));
     }
 
-    private static string GenerateJson(List<TelemetryData> readings)
+    private static string SerializeJson(IEnumerable<TelemetryData> readings)
     {
         var items = readings.Select(r =>
             $"{{\"recordedAt\":\"{r.RecordedAt:O}\",\"deviceId\":\"{r.DeviceId}\",\"healthScore\":{r.HealthScore},\"soilMoisture\":{r.SoilMoisture},\"temperature\":{r.Temperature},\"humidity\":{r.Humidity},\"lightLevel\":{r.LightLevel}}}");
