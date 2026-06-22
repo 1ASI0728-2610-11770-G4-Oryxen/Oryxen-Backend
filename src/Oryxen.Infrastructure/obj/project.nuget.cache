@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "NrEd+6X02f0=",
+  "dgSpecHash": "FUPgusmzmf0=",
   "success": true,
   "projectFilePath": "D:\\Dev\\Proyectos\\Oryxen\\Oryxen-Backend\\src\\Oryxen.Infrastructure\\Oryxen.Infrastructure.csproj",
   "expectedPackageFiles": [
@@ -23,11 +23,15 @@
     "C:\\Users\\abrah\\.nuget\\packages\\microsoft.entityframeworkcore.relational\\9.0.10\\microsoft.entityframeworkcore.relational.9.0.10.nupkg.sha512",
     "C:\\Users\\abrah\\.nuget\\packages\\microsoft.extensions.caching.abstractions\\9.0.10\\microsoft.extensions.caching.abstractions.9.0.10.nupkg.sha512",
     "C:\\Users\\abrah\\.nuget\\packages\\microsoft.extensions.caching.memory\\9.0.10\\microsoft.extensions.caching.memory.9.0.10.nupkg.sha512",
+    "C:\\Users\\abrah\\.nuget\\packages\\microsoft.extensions.configuration\\9.0.10\\microsoft.extensions.configuration.9.0.10.nupkg.sha512",
     "C:\\Users\\abrah\\.nuget\\packages\\microsoft.extensions.configuration.abstractions\\9.0.10\\microsoft.extensions.configuration.abstractions.9.0.10.nupkg.sha512",
     "C:\\Users\\abrah\\.nuget\\packages\\microsoft.extensions.configuration.binder\\9.0.10\\microsoft.extensions.configuration.binder.9.0.10.nupkg.sha512",
     "C:\\Users\\abrah\\.nuget\\packages\\microsoft.extensions.dependencyinjection\\9.0.10\\microsoft.extensions.dependencyinjection.9.0.10.nupkg.sha512",
     "C:\\Users\\abrah\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\9.0.10\\microsoft.extensions.dependencyinjection.abstractions.9.0.10.nupkg.sha512",
     "C:\\Users\\abrah\\.nuget\\packages\\microsoft.extensions.dependencymodel\\9.0.10\\microsoft.extensions.dependencymodel.9.0.10.nupkg.sha512",
+    "C:\\Users\\abrah\\.nuget\\packages\\microsoft.extensions.diagnostics\\9.0.10\\microsoft.extensions.diagnostics.9.0.10.nupkg.sha512",
+    "C:\\Users\\abrah\\.nuget\\packages\\microsoft.extensions.diagnostics.abstractions\\9.0.10\\microsoft.extensions.diagnostics.abstractions.9.0.10.nupkg.sha512",
+    "C:\\Users\\abrah\\.nuget\\packages\\microsoft.extensions.http\\9.0.10\\microsoft.extensions.http.9.0.10.nupkg.sha512",
     "C:\\Users\\abrah\\.nuget\\packages\\microsoft.extensions.logging\\9.0.10\\microsoft.extensions.logging.9.0.10.nupkg.sha512",
     "C:\\Users\\abrah\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\9.0.10\\microsoft.extensions.logging.abstractions.9.0.10.nupkg.sha512",
     "C:\\Users\\abrah\\.nuget\\packages\\microsoft.extensions.options\\9.0.10\\microsoft.extensions.options.9.0.10.nupkg.sha512",

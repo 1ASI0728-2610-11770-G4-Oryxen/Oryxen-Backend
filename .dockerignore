@@ -1,0 +1,19 @@
+# Docker ignore — exclude files not needed in the build context
+**/bin/
+**/obj/
+**/.vs/
+**/.vscode/
+**/node_modules/
+**/dist/
+**/.git/
+**/.gitignore
+**/*.user
+**/*.suo
+**/TestResults/
+**/appsettings.Development.json
+**/appsettings.Local.json
+docker-compose.yml
+api_error.log
+api_output.log
+README.md
+.gitkeep

@@ -39,16 +39,29 @@ builder.Services
 
 builder.Services.AddAuthorization();
 
+// ---- CORS: explicit allow-list from configuration (no more allow-any) --------
 const string CorsPolicy = "OryxenFrontends";
+var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>();
+if (allowedOrigins is null || allowedOrigins.Length == 0)
+{
+    // Dev fallback: Vite dev/preview servers + Live Server for the landing page.
+    allowedOrigins = new[]
+    {
+        "http://localhost:5173", "http://localhost:4173",
+        "http://127.0.0.1:5500", "http://localhost:5500"
+    };
+}
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(CorsPolicy, policy =>
-        policy.SetIsOriginAllowed(_ => true) // dev: any localhost origin (Vite, mobile emulator, Live Server)
+        policy.WithOrigins(allowedOrigins)
               .AllowAnyHeader()
               .AllowAnyMethod());
 });
 
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddHealthChecks();
 builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo
@@ -84,7 +97,9 @@ await ApplyMigrationsAsync(app);
 // ---- HTTP pipeline -----------------------------------------------------------
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
-if (app.Environment.IsDevelopment())
+// Swagger is dev-only by default, but can be force-enabled for staging demos via "Swagger:Enabled".
+var swaggerEnabled = builder.Configuration.GetValue<bool?>("Swagger:Enabled") ?? app.Environment.IsDevelopment();
+if (swaggerEnabled)
 {
     app.UseSwagger();
     app.UseSwaggerUI(options =>
@@ -97,6 +112,7 @@ if (app.Environment.IsDevelopment())
 app.UseCors(CorsPolicy);
 app.UseAuthentication();
 app.UseAuthorization();
+app.MapHealthChecks("/health");
 app.MapControllers();
 
 app.Run();

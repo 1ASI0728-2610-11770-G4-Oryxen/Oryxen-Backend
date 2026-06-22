@@ -24,6 +24,10 @@ public sealed class OryxenDbContext : DbContext, IUnitOfWork
 
     public DbSet<TelemetryData> TelemetryReadings => Set<TelemetryData>();
 
+    public DbSet<Plant> Plants => Set<Plant>();
+
+    public DbSet<WateringLog> WateringLogs => Set<WateringLog>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(OryxenDbContext).Assembly);
