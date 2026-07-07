@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
+
 using Oryxen.Application.Common.Interfaces;
 using Oryxen.Application.Telemetry.Contracts;
 using Oryxen.Domain.Entities;
@@ -20,20 +20,17 @@ public sealed class IoTSimulationService : IIoTSimulationService
     private readonly ITelemetryRepository _telemetry;
     private readonly ITelemetryService _telemetryService;
     private readonly IUnitOfWork _unitOfWork;
-    private readonly ILogger<IoTSimulationService> _logger;
 
     public IoTSimulationService(
         IPlantRepository plants,
         ITelemetryRepository telemetry,
         ITelemetryService telemetryService,
-        IUnitOfWork unitOfWork,
-        ILogger<IoTSimulationService> logger)
+        IUnitOfWork unitOfWork)
     {
         _plants = plants;
         _telemetry = telemetry;
         _telemetryService = telemetryService;
         _unitOfWork = unitOfWork;
-        _logger = logger;
     }
 
     public async Task<SeedResultResponse> SeedHistoricalDataAsync(int days = 30, CancellationToken cancellationToken = default)
@@ -42,7 +39,7 @@ public sealed class IoTSimulationService : IIoTSimulationService
         var allPlants = await _plants.GetAllActiveAsync(cancellationToken);
         int totalReadings = 0;
 
-        _logger.LogInformation("Starting historical IoT data seeding for {Count} plants over {Days} days.", allPlants.Count, days);
+
 
         foreach (var plant in allPlants)
         {
@@ -109,7 +106,7 @@ public sealed class IoTSimulationService : IIoTSimulationService
         await _unitOfWork.SaveChangesAsync(cancellationToken);
         stopwatch.Stop();
 
-        _logger.LogInformation("Completed IoT data seeding in {Elapsed}. Generated {Readings} readings.", stopwatch.Elapsed, totalReadings);
+        stopwatch.Stop();
         
         return new SeedResultResponse(allPlants.Count, totalReadings, stopwatch.Elapsed);
     }
@@ -187,6 +184,6 @@ public sealed class IoTSimulationService : IIoTSimulationService
              await _unitOfWork.SaveChangesAsync(cancellationToken);
         }
 
-        _logger.LogInformation("Generated {Count} realtime IoT readings.", generatedCount);
+
     }
 }
