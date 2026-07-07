@@ -11,8 +11,7 @@ using Oryxen.Infrastructure.External;
 using Oryxen.Infrastructure.Persistence;
 using Oryxen.Infrastructure.Persistence.Repositories;
 using Oryxen.Infrastructure.Security;
-
-
+using Oryxen.Infrastructure.Workers;
 
 namespace Oryxen.Infrastructure;
 
@@ -26,7 +25,6 @@ public static class DependencyInjection
             options.UseNpgsql(
                 configuration.GetConnectionString("OryxenDb"),
                 npgsql => npgsql.MigrationsAssembly(typeof(OryxenDbContext).Assembly.FullName));
-            options.ConfigureWarnings(w => w.Ignore(RelationalEventId.PendingModelChangesWarning));
         });
 
         services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<OryxenDbContext>());
@@ -78,6 +76,9 @@ public static class DependencyInjection
             client.BaseAddress = new Uri(settings.BaseUrl);
             client.Timeout = TimeSpan.FromSeconds(15);
         });
+
+        // ---- Background Workers ---------------------------------------------
+        services.AddHostedService<IoTSimulationWorker>();
 
         return services;
     }

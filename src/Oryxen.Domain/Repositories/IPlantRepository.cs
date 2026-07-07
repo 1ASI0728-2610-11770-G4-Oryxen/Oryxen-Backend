@@ -8,6 +8,8 @@ public interface IPlantRepository
 
     Task<IReadOnlyList<Plant>> GetByUserAsync(Guid userAccountId, CancellationToken cancellationToken = default);
 
+    Task<IReadOnlyList<Plant>> GetAllActiveAsync(CancellationToken cancellationToken = default);
+
     Task AddAsync(Plant plant, CancellationToken cancellationToken = default);
 
     void Remove(Plant plant);

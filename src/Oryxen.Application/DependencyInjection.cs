@@ -22,6 +22,7 @@ public static class DependencyInjection
         services.AddScoped<ISubscriptionService, SubscriptionService>();
         services.AddScoped<ICommunityService, CommunityService>();
         services.AddScoped<IAnalysisService, AnalysisService>();
+        services.AddScoped<IIoTSimulationService, IoTSimulationService>();
 
         return services;
     }
