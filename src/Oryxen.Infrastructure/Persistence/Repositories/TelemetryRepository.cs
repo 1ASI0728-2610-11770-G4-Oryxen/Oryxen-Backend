@@ -40,4 +40,14 @@ public sealed class TelemetryRepository : ITelemetryRepository
             .Take(MaxRows)
             .ToListAsync(cancellationToken);
     }
+
+    public async Task AddRangeAsync(IEnumerable<TelemetryData> readings, CancellationToken cancellationToken = default) =>
+        await _db.TelemetryReadings.AddRangeAsync(readings, cancellationToken);
+
+    public async Task<TelemetryData?> GetLatestByPlantAsync(Guid plantId, CancellationToken cancellationToken = default) =>
+        await _db.TelemetryReadings
+            .AsNoTracking()
+            .Where(t => t.PlantId == plantId)
+            .OrderByDescending(t => t.RecordedAt)
+            .FirstOrDefaultAsync(cancellationToken);
 }

@@ -38,6 +38,8 @@ public sealed class ExceptionHandlingMiddleware
             InvalidCredentialsException => (StatusCodes.Status401Unauthorized, exception.Message),
             InvalidRefreshTokenException => (StatusCodes.Status401Unauthorized, exception.Message),
             PlantNotFoundException => (StatusCodes.Status404NotFound, exception.Message),
+            DiagnosisNotFoundException => (StatusCodes.Status404NotFound, exception.Message),
+            PlanNotFoundException => (StatusCodes.Status404NotFound, exception.Message),
             ExternalServiceException => (StatusCodes.Status502BadGateway, exception.Message),
             _ => (StatusCodes.Status500InternalServerError, "An unexpected error occurred.")
         };

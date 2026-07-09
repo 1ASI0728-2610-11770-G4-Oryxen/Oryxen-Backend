@@ -28,6 +28,22 @@ public sealed class OryxenDbContext : DbContext, IUnitOfWork
 
     public DbSet<WateringLog> WateringLogs => Set<WateringLog>();
 
+    public DbSet<PlantDiagnosis> Diagnoses => Set<PlantDiagnosis>();
+
+    public DbSet<Plan> Plans => Set<Plan>();
+
+    public DbSet<Payment> Payments => Set<Payment>();
+
+    public DbSet<Notification> Notifications => Set<Notification>();
+
+    public DbSet<CommunityPost> CommunityPosts => Set<CommunityPost>();
+
+    public DbSet<Comment> Comments => Set<Comment>();
+
+    public DbSet<Like> Likes => Set<Like>();
+
+    public DbSet<AnalysisReport> AnalysisReports => Set<AnalysisReport>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(OryxenDbContext).Assembly);

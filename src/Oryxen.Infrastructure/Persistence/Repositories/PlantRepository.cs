@@ -22,6 +22,12 @@ public sealed class PlantRepository : IPlantRepository
             .OrderByDescending(p => p.CreatedAt)
             .ToListAsync(cancellationToken);
 
+    public async Task<IReadOnlyList<Plant>> GetAllActiveAsync(CancellationToken cancellationToken = default) =>
+        await _db.Plants
+            .Include(p => p.WateringLogs)
+            .OrderBy(p => p.CreatedAt)
+            .ToListAsync(cancellationToken);
+
     public async Task AddAsync(Plant plant, CancellationToken cancellationToken = default) =>
         await _db.Plants.AddAsync(plant, cancellationToken);
 

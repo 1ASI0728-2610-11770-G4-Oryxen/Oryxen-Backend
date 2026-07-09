@@ -26,6 +26,12 @@ public sealed class UserAccountRepository : IUserAccountRepository
             .Include(u => u.Roles)
             .FirstOrDefaultAsync(u => u.RefreshTokenHash == refreshTokenHash, cancellationToken);
 
+    public Task<UserAccount?> GetByStripeCustomerIdAsync(string stripeCustomerId, CancellationToken cancellationToken = default) =>
+        _db.Users
+            .Include(u => u.Roles)
+            .Include(u => u.Subscription)
+            .FirstOrDefaultAsync(u => u.Subscription != null && u.Subscription.StripeCustomerId == stripeCustomerId, cancellationToken);
+
     public Task<bool> ExistsByEmailAsync(string email, CancellationToken cancellationToken = default) =>
         _db.Users.AnyAsync(u => u.Email == email, cancellationToken);
 

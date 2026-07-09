@@ -11,4 +11,8 @@ public interface ITelemetryRepository
         DateTime? from,
         DateTime? to,
         CancellationToken cancellationToken = default);
+
+    Task AddRangeAsync(IEnumerable<TelemetryData> readings, CancellationToken cancellationToken = default);
+
+    Task<TelemetryData?> GetLatestByPlantAsync(Guid plantId, CancellationToken cancellationToken = default);
 }
