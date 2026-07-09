@@ -17,6 +17,29 @@ services:
       timeout: 5s
       retries: 5
 
+  oryxen-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: oryxen-api
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_HTTP_PORTS: 8080
+      # Inside the compose network the DB is reachable by service name, not localhost.
+      ConnectionStrings__OryxenDb: Host=oryxen-postgres;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
+      Jwt__Secret: ${Jwt__Secret:-oryxen-local-dev-super-secret-signing-key-change-me-in-production-2026!!}
+      GeminiVision__ApiKey: ${GeminiVision__ApiKey:-}
+      OpenWeatherMap__ApiKey: ${OpenWeatherMap__ApiKey:-}
+      Stripe__SecretKey: ${Stripe__SecretKey:-}
+      Stripe__WebhookSecret: ${Stripe__WebhookSecret:-}
+      SendGrid__ApiKey: ${SendGrid__ApiKey:-}
+    depends_on:
+      oryxen-postgres:
+        condition: service_healthy
+
 volumes:
   oryxen_pgdata:
     name: oryxen_pgdata

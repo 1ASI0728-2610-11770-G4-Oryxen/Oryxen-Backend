@@ -18,6 +18,7 @@ public static class DependencyInjection
         services.AddScoped<ITelemetryService, TelemetryService>();
         services.AddScoped<IPlantService, PlantService>();
         services.AddScoped<IDiagnosisService, DiagnosisService>();
+        services.AddScoped<IChatService, ChatService>();
         services.AddScoped<IPlanService, PlanService>();
         services.AddScoped<ISubscriptionService, SubscriptionService>();
         services.AddScoped<ICommunityService, CommunityService>();

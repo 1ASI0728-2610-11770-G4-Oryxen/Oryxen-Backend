@@ -10,9 +10,12 @@ namespace Oryxen.Infrastructure.External;
 
 /// <summary>
 /// <see cref="IPaymentPlatformService"/> backed by the Stripe REST API. Creates Checkout
-/// Sessions via <c>POST /v1/checkout/sessions</c> and parses webhook events by verifying
-/// the signature locally. Uses HTTP calls (no Stripe SDK dependency) to keep the
-/// Infrastructure layer lightweight. Missing API key → <see cref="ExternalServiceException"/> (502).
+/// Sessions via <c>POST /v1/checkout/sessions</c>. Webhook payloads are only parsed after
+/// their <c>Stripe-Signature</c> header passes HMAC-SHA256 verification against
+/// <c>Stripe:WebhookSecret</c> (see <see cref="StripeWebhookSignatureValidator"/>); events
+/// with a missing or invalid signature are rejected. Uses HTTP calls (no Stripe SDK
+/// dependency) to keep the Infrastructure layer lightweight. Missing API key →
+/// <see cref="ExternalServiceException"/> (502).
 /// </summary>
 public sealed class StripePaymentService : IPaymentPlatformService
 {
@@ -86,9 +89,18 @@ public sealed class StripePaymentService : IPaymentPlatformService
         string signature,
         CancellationToken cancellationToken = default)
     {
+        // Without a configured secret the endpoint is considered disabled: ignore silently.
         if (string.IsNullOrWhiteSpace(_settings.WebhookSecret))
         {
             return Task.FromResult<WebhookEventResult?>(null);
+        }
+
+        // Reject any delivery whose signature is absent, expired or forged. Stripe signs
+        // "{t}.{payload}" with the endpoint secret; without this check anyone could POST a
+        // fake "checkout.session.completed" and activate a Premium subscription.
+        if (!StripeWebhookSignatureValidator.IsValid(payload, signature, _settings.WebhookSecret))
+        {
+            throw new InvalidWebhookSignatureException();
         }
 
         try

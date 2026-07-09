@@ -48,10 +48,9 @@ public sealed class PlantService : IPlantService
         return responses;
     }
 
-    public async Task<PlantResponse> GetByIdAsync(Guid plantId, CancellationToken cancellationToken = default)
+    public async Task<PlantResponse> GetByIdAsync(Guid plantId, Guid requesterId, bool isAdmin, CancellationToken cancellationToken = default)
     {
-        var plant = await _plants.GetByIdAsync(plantId, cancellationToken)
-            ?? throw new PlantNotFoundException(plantId);
+        var plant = await GetOwnedPlantAsync(plantId, requesterId, isAdmin, cancellationToken);
 
         return await ToResponseAsync(plant, cancellationToken);
     }
@@ -75,10 +74,9 @@ public sealed class PlantService : IPlantService
         return await ToResponseAsync(plant, cancellationToken);
     }
 
-    public async Task<PlantResponse> UpdateAsync(Guid plantId, UpdatePlantRequest request, CancellationToken cancellationToken = default)
+    public async Task<PlantResponse> UpdateAsync(Guid plantId, Guid requesterId, bool isAdmin, UpdatePlantRequest request, CancellationToken cancellationToken = default)
     {
-        var plant = await _plants.GetByIdAsync(plantId, cancellationToken)
-            ?? throw new PlantNotFoundException(plantId);
+        var plant = await GetOwnedPlantAsync(plantId, requesterId, isAdmin, cancellationToken);
 
         plant.Name = request.Name.Trim();
         plant.Type = request.Type.Trim();
@@ -97,19 +95,17 @@ public sealed class PlantService : IPlantService
         return await ToResponseAsync(plant, cancellationToken);
     }
 
-    public async Task DeleteAsync(Guid plantId, CancellationToken cancellationToken = default)
+    public async Task DeleteAsync(Guid plantId, Guid requesterId, bool isAdmin, CancellationToken cancellationToken = default)
     {
-        var plant = await _plants.GetByIdAsync(plantId, cancellationToken)
-            ?? throw new PlantNotFoundException(plantId);
+        var plant = await GetOwnedPlantAsync(plantId, requesterId, isAdmin, cancellationToken);
 
         _plants.Remove(plant);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task<PlantResponse> WaterAsync(Guid plantId, WaterPlantRequest request, CancellationToken cancellationToken = default)
+    public async Task<PlantResponse> WaterAsync(Guid plantId, Guid requesterId, bool isAdmin, WaterPlantRequest request, CancellationToken cancellationToken = default)
     {
-        var plant = await _plants.GetByIdAsync(plantId, cancellationToken)
-            ?? throw new PlantNotFoundException(plantId);
+        var plant = await GetOwnedPlantAsync(plantId, requesterId, isAdmin, cancellationToken);
 
         var wateredAt = request.WateredAt ?? DateTime.UtcNow;
         plant.WateringLogs.Add(new WateringLog { PlantId = plant.Id, WateredAt = wateredAt });
@@ -121,10 +117,9 @@ public sealed class PlantService : IPlantService
         return await ToResponseAsync(plant, cancellationToken);
     }
 
-    public async Task<PlantResponse> AssignSensorAsync(Guid plantId, AssignSensorRequest request, CancellationToken cancellationToken = default)
+    public async Task<PlantResponse> AssignSensorAsync(Guid plantId, Guid requesterId, bool isAdmin, AssignSensorRequest request, CancellationToken cancellationToken = default)
     {
-        var plant = await _plants.GetByIdAsync(plantId, cancellationToken)
-            ?? throw new PlantNotFoundException(plantId);
+        var plant = await GetOwnedPlantAsync(plantId, requesterId, isAdmin, cancellationToken);
 
         plant.AssignedDeviceId = request.DeviceId.Trim();
         await _unitOfWork.SaveChangesAsync(cancellationToken);
@@ -132,10 +127,9 @@ public sealed class PlantService : IPlantService
         return await ToResponseAsync(plant, cancellationToken);
     }
 
-    public async Task<WeatherResponse> GetWeatherAsync(Guid plantId, CancellationToken cancellationToken = default)
+    public async Task<WeatherResponse> GetWeatherAsync(Guid plantId, Guid requesterId, bool isAdmin, CancellationToken cancellationToken = default)
     {
-        var plant = await _plants.GetByIdAsync(plantId, cancellationToken)
-            ?? throw new PlantNotFoundException(plantId);
+        var plant = await GetOwnedPlantAsync(plantId, requesterId, isAdmin, cancellationToken);
 
         if (string.IsNullOrWhiteSpace(plant.Location))
         {
@@ -150,6 +144,24 @@ public sealed class PlantService : IPlantService
             snapshot.HumidityPct,
             snapshot.Description,
             snapshot.ObservedAtUtc);
+    }
+
+    /// <summary>
+    /// Loads a plant and enforces object-level authorization: the requester must be the
+    /// plant's owner or an ADMIN. Throws 404 when the plant does not exist and 403 when
+    /// it exists but belongs to another user (the Gherkin RBAC spec mandates 403).
+    /// </summary>
+    private async Task<Plant> GetOwnedPlantAsync(Guid plantId, Guid requesterId, bool isAdmin, CancellationToken cancellationToken)
+    {
+        var plant = await _plants.GetByIdAsync(plantId, cancellationToken)
+            ?? throw new PlantNotFoundException(plantId);
+
+        if (!isAdmin && plant.UserAccountId != requesterId)
+        {
+            throw new PlantAccessDeniedException(plantId);
+        }
+
+        return plant;
     }
 
     private async Task<PlantResponse> ToResponseAsync(Plant plant, CancellationToken cancellationToken)

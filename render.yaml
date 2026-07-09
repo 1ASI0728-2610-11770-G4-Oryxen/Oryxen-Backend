@@ -1,0 +1,55 @@
+# ============================================================================
+# Render Blueprint for the Oryxen Backend (Docker web service + managed Postgres).
+# Import from the Render dashboard: New -> Blueprint -> select this repo.
+# Secrets (sync: false) must be entered manually in the Render UI — never here.
+# ============================================================================
+services:
+  - type: web
+    name: oryxen-backend
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /health
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      - key: ASPNETCORE_HTTP_PORTS
+        value: "8080"
+      - key: Swagger__Enabled
+        value: "true"
+      # Npgsql needs key=value format, not the postgres:// URL Render generates, so this
+      # is entered manually in the Render UI using the oryxen-db credentials:
+      #   Host=<host>;Port=5432;Database=oryxen;Username=oryxen;Password=<password>;SSL Mode=Require;Trust Server Certificate=true
+      - key: ConnectionStrings__OryxenDb
+        sync: false
+      - key: Jwt__Issuer
+        value: OryxenAPI
+      - key: Jwt__Audience
+        value: OryxenClients
+      - key: Jwt__Secret
+        generateValue: true
+      - key: Jwt__AccessTokenMinutes
+        value: "30"
+      - key: Jwt__RefreshTokenDays
+        value: "7"
+      # Add your real frontend origins after deploying Web (Vercel) and Landing (Firebase):
+      - key: Cors__AllowedOrigins__0
+        value: https://YOUR-WEB-APP.vercel.app
+      - key: Cors__AllowedOrigins__1
+        value: https://YOUR-LANDING.web.app
+      - key: GeminiVision__ApiKey
+        sync: false
+      - key: OpenWeatherMap__ApiKey
+        sync: false
+      - key: Stripe__SecretKey
+        sync: false
+      - key: Stripe__WebhookSecret
+        sync: false
+      - key: SendGrid__ApiKey
+        sync: false
+
+databases:
+  - name: oryxen-db
+    plan: free
+    databaseName: oryxen
+    user: oryxen

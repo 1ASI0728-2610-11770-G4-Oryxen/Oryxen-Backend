@@ -93,6 +93,7 @@ var app = builder.Build();
 
 // ---- Database migration on startup (dev convenience) -------------------------
 await ApplyMigrationsAsync(app);
+await SeedPlansAsync(app);
 
 // ---- HTTP pipeline -----------------------------------------------------------
 app.UseMiddleware<ExceptionHandlingMiddleware>();
@@ -132,5 +133,51 @@ static async Task ApplyMigrationsAsync(WebApplication app)
         logger.LogWarning(
             ex,
             "Could not apply database migrations on startup. Make sure PostgreSQL is running (docker compose up -d). The API will still start so Swagger remains reachable.");
+    }
+}
+
+/// <summary>
+/// Idempotent seed of the commercial plan catalog (Basic / Premium, mirroring the Landing
+/// Page pricing). Runs after migrations so GET /api/v1/plans is demonstrable on a fresh
+/// database without manual INSERTs; existing rows are never duplicated or overwritten.
+/// </summary>
+static async Task SeedPlansAsync(WebApplication app)
+{
+    using var scope = app.Services.CreateScope();
+    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+    try
+    {
+        var db = scope.ServiceProvider.GetRequiredService<OryxenDbContext>();
+        if (await db.Plans.AnyAsync())
+        {
+            return;
+        }
+
+        db.Plans.AddRange(
+            new Oryxen.Domain.Entities.Plan
+            {
+                Name = "Basic",
+                Price = 25m,
+                Currency = "PEN",
+                BillingCycleMonths = 1,
+                Features = "3 plants monitor,Basic watering,Chatbot AI basic functions,Email support",
+                IsActive = true
+            },
+            new Oryxen.Domain.Entities.Plan
+            {
+                Name = "Premium",
+                Price = 50m,
+                Currency = "PEN",
+                BillingCycleMonths = 1,
+                Features = "Unlimited plant monitors,Advanced watering,Priority support,Chatbot AI premium functions,Community access",
+                IsActive = true
+            });
+
+        await db.SaveChangesAsync();
+        logger.LogInformation("Seeded the plan catalog (Basic S/.25, Premium S/.50).");
+    }
+    catch (Exception ex)
+    {
+        logger.LogWarning(ex, "Could not seed the plan catalog; GET /api/v1/plans may be empty until the database is reachable.");
     }
 }
