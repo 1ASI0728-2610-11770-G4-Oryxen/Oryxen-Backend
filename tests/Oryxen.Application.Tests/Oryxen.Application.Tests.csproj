@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Oryxen.Application\Oryxen.Application.csproj" />
+    <ProjectReference Include="..\..\src\Oryxen.Infrastructure\Oryxen.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

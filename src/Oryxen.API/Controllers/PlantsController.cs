@@ -39,9 +39,10 @@ public sealed class PlantsController : ControllerBase
     /// <summary>Returns a single plant with its recent telemetry metrics and watering logs.</summary>
     [HttpGet("plants/{id:guid}")]
     [ProducesResponseType(typeof(PlantResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<PlantResponse>> GetById(Guid id, CancellationToken cancellationToken) =>
-        Ok(await _plants.GetByIdAsync(id, cancellationToken));
+        Ok(await _plants.GetByIdAsync(id, CurrentUserId, IsAdmin, cancellationToken));
 
     /// <summary>Creates a plant owned by the authenticated user.</summary>
     [HttpPost("plants")]
@@ -58,7 +59,7 @@ public sealed class PlantsController : ControllerBase
     [ProducesResponseType(typeof(PlantResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<PlantResponse>> Update(Guid id, [FromBody] UpdatePlantRequest request, CancellationToken cancellationToken) =>
-        Ok(await _plants.UpdateAsync(id, request, cancellationToken));
+        Ok(await _plants.UpdateAsync(id, CurrentUserId, IsAdmin, request, cancellationToken));
 
     /// <summary>Deletes a plant and its watering logs.</summary>
     [HttpDelete("plants/{id:guid}")]
@@ -66,7 +67,7 @@ public sealed class PlantsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
     {
-        await _plants.DeleteAsync(id, cancellationToken);
+        await _plants.DeleteAsync(id, CurrentUserId, IsAdmin, cancellationToken);
         return NoContent();
     }
 
@@ -75,14 +76,14 @@ public sealed class PlantsController : ControllerBase
     [ProducesResponseType(typeof(PlantResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<PlantResponse>> Water(Guid id, [FromBody] WaterPlantRequest request, CancellationToken cancellationToken) =>
-        Ok(await _plants.WaterAsync(id, request, cancellationToken));
+        Ok(await _plants.WaterAsync(id, CurrentUserId, IsAdmin, request, cancellationToken));
 
     /// <summary>Binds a Sensor Lite device to the plant (sensor assignment).</summary>
     [HttpPost("plants/{id:guid}/sensor")]
     [ProducesResponseType(typeof(PlantResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<PlantResponse>> AssignSensor(Guid id, [FromBody] AssignSensorRequest request, CancellationToken cancellationToken) =>
-        Ok(await _plants.AssignSensorAsync(id, request, cancellationToken));
+        Ok(await _plants.AssignSensorAsync(id, CurrentUserId, IsAdmin, request, cancellationToken));
 
     /// <summary>Ambient weather for the plant's farm location, complementing Sensor Lite telemetry.</summary>
     [HttpGet("plants/{id:guid}/weather")]
@@ -90,10 +91,12 @@ public sealed class PlantsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status502BadGateway)]
     public async Task<ActionResult<WeatherResponse>> GetWeather(Guid id, CancellationToken cancellationToken) =>
-        Ok(await _plants.GetWeatherAsync(id, cancellationToken));
+        Ok(await _plants.GetWeatherAsync(id, CurrentUserId, IsAdmin, cancellationToken));
 
     private Guid CurrentUserId => Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
+    private bool IsAdmin => User.IsInRole(Roles.Admin);
+
     private bool IsSelfOrAdmin(Guid userId) =>
-        User.IsInRole(Roles.Admin) || CurrentUserId == userId;
+        IsAdmin || CurrentUserId == userId;
 }

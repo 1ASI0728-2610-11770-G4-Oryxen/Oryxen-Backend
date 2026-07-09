@@ -88,10 +88,10 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Push to GitHub Container Registry
-          if: github.ref == 'refs/heads/main'
-          run: |
-            OWNER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
-            docker tag ${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.tag }} ghcr.io/${OWNER}/${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.tag }}
-            docker tag ${{ env.IMAGE_NAME }}:latest ghcr.io/${OWNER}/${{ env.IMAGE_NAME }}:latest
-            docker push ghcr.io/${OWNER}/${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.tag }}
-            docker push ghcr.io/${OWNER}/${{ env.IMAGE_NAME }}:latest
+        if: github.ref == 'refs/heads/main'
+        run: |
+          OWNER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+          docker tag ${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.tag }} ghcr.io/${OWNER}/${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.tag }}
+          docker tag ${{ env.IMAGE_NAME }}:latest ghcr.io/${OWNER}/${{ env.IMAGE_NAME }}:latest
+          docker push ghcr.io/${OWNER}/${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.tag }}
+          docker push ghcr.io/${OWNER}/${{ env.IMAGE_NAME }}:latest
