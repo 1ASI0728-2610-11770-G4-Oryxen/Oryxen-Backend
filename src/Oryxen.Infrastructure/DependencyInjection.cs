@@ -43,7 +43,10 @@ public static class DependencyInjection
         services.AddScoped<ICommunityRepository, CommunityRepository>();
         services.AddScoped<IAnalysisReportRepository, AnalysisReportRepository>();
         services.AddSingleton<IImageMetadataSanitizer, ImageMetadataSanitizer>();
-        services.AddScoped<IEmailService, SendGridEmailService>();
+        services.AddHttpClient<IEmailService, SendGridEmailService>(client =>
+        {
+            client.Timeout = TimeSpan.FromSeconds(10);
+        });
         services.AddScoped<IPushNotificationService, FirebaseFcmService>();
 
         services.Configure<JwtSettings>(configuration.GetSection(JwtSettings.SectionName));
@@ -62,6 +65,14 @@ public static class DependencyInjection
         // ---- Third-party integration: Gemini Vision API (multimodal AI) ------
         services.Configure<GeminiVisionSettings>(configuration.GetSection(GeminiVisionSettings.SectionName));
         services.AddHttpClient<IMultimodalAiService, GeminiVisionService>((sp, client) =>
+        {
+            var settings = sp.GetRequiredService<IOptions<GeminiVisionSettings>>().Value;
+            client.BaseAddress = new Uri(settings.BaseUrl);
+            client.Timeout = TimeSpan.FromSeconds(30);
+        });
+
+        // ---- Third-party integration: Gemini text chat (server-side assistant) ----
+        services.AddHttpClient<IChatAiService, GeminiChatService>((sp, client) =>
         {
             var settings = sp.GetRequiredService<IOptions<GeminiVisionSettings>>().Value;
             client.BaseAddress = new Uri(settings.BaseUrl);

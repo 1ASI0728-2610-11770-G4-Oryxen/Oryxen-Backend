@@ -19,8 +19,15 @@ namespace Oryxen.API.Controllers;
 public sealed class AiController : ControllerBase
 {
     private readonly IDiagnosisService _diagnoses;
+    private readonly IChatService _chat;
+    private readonly IWebHostEnvironment _env;
 
-    public AiController(IDiagnosisService diagnoses) => _diagnoses = diagnoses;
+    public AiController(IDiagnosisService diagnoses, IChatService chat, IWebHostEnvironment env)
+    {
+        _diagnoses = diagnoses;
+        _chat = chat;
+        _env = env;
+    }
 
     /// <summary>
     /// Creates a new multimodal diagnosis: uploads a crop photo (multipart) for the given
@@ -68,6 +75,33 @@ public sealed class AiController : ControllerBase
     [ProducesResponseType(typeof(IReadOnlyList<DiagnosisResponse>), StatusCodes.Status200OK)]
     public async Task<ActionResult<IReadOnlyList<DiagnosisResponse>>> GetByPlant(Guid plantId, CancellationToken ct) =>
         Ok(await _diagnoses.GetByPlantAsync(plantId, ct));
+
+    /// <summary>
+    /// Conversational plant-care assistant. The reply is generated server-side (Gemini),
+    /// so no AI API key ever reaches the web or mobile clients. In Development without a
+    /// configured key it degrades to an explicitly-labeled fallback reply instead of 502,
+    /// keeping local demos usable.
+    /// </summary>
+    [HttpPost("chat")]
+    [ProducesResponseType(typeof(ChatResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status502BadGateway)]
+    public async Task<ActionResult<ChatResponse>> Chat([FromBody] ChatRequest request, CancellationToken ct)
+    {
+        try
+        {
+            return Ok(await _chat.ChatAsync(request, ct));
+        }
+        catch (Application.Common.Exceptions.ExternalServiceException) when (_env.IsDevelopment())
+        {
+            return Ok(new ChatResponse(
+                "(Development fallback — configure GeminiVision__ApiKey for real AI replies.) " +
+                "General tip: check soil moisture before watering; most houseplants prefer the top " +
+                "2-3 cm of soil to dry out between waterings, and steady indirect light.",
+                "fallback-dev",
+                DateTime.UtcNow));
+        }
+    }
 
     private Guid CurrentUserId => Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 }
