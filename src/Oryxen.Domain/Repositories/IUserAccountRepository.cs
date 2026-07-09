@@ -10,6 +10,8 @@ public interface IUserAccountRepository
 
     Task<UserAccount?> GetByRefreshTokenHashAsync(string refreshTokenHash, CancellationToken cancellationToken = default);
 
+    Task<UserAccount?> GetByStripeCustomerIdAsync(string stripeCustomerId, CancellationToken cancellationToken = default);
+
     Task<bool> ExistsByEmailAsync(string email, CancellationToken cancellationToken = default);
 
     Task AddAsync(UserAccount user, CancellationToken cancellationToken = default);
