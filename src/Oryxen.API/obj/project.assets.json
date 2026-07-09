@@ -1335,78 +1335,6 @@
         "runtime": {
           "bin/placeholder/Oryxen.Infrastructure.dll": {}
         }
-      },
-      "Oryxen.Application/1.0.0": {
-        "type": "project",
-        "framework": ".NETCoreApp,Version=v10.0",
-        "dependencies": {
-          "Oryxen.Domain": "1.0.0"
-        },
-        "compile": {
-          "bin/placeholder/Oryxen.Application.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/Oryxen.Application.dll": {}
-        }
-      },
-      "Oryxen.Domain/1.0.0": {
-        "type": "project",
-        "framework": ".NETCoreApp,Version=v10.0",
-        "compile": {
-          "bin/placeholder/Oryxen.Domain.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/Oryxen.Domain.dll": {}
-        }
-      },
-      "Oryxen.Infrastructure/1.0.0": {
-        "type": "project",
-        "framework": ".NETCoreApp,Version=v10.0",
-        "dependencies": {
-          "Oryxen.Application": "1.0.0"
-        },
-        "compile": {
-          "bin/placeholder/Oryxen.Infrastructure.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/Oryxen.Infrastructure.dll": {}
-        }
-      },
-      "Oryxen.Application/1.0.0": {
-        "type": "project",
-        "framework": ".NETCoreApp,Version=v10.0",
-        "dependencies": {
-          "Oryxen.Domain": "1.0.0"
-        },
-        "compile": {
-          "bin/placeholder/Oryxen.Application.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/Oryxen.Application.dll": {}
-        }
-      },
-      "Oryxen.Domain/1.0.0": {
-        "type": "project",
-        "framework": ".NETCoreApp,Version=v10.0",
-        "compile": {
-          "bin/placeholder/Oryxen.Domain.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/Oryxen.Domain.dll": {}
-        }
-      },
-      "Oryxen.Infrastructure/1.0.0": {
-        "type": "project",
-        "framework": ".NETCoreApp,Version=v10.0",
-        "dependencies": {
-          "Oryxen.Application": "1.0.0"
-        },
-        "compile": {
-          "bin/placeholder/Oryxen.Infrastructure.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/Oryxen.Infrastructure.dll": {}
-        }
       }
     }
   },
@@ -3471,8 +3399,6 @@
         "microsoft.openapi.nuspec"
       ]
     },
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
     "Mono.TextTemplating/3.0.0": {
       "sha512": "YqueG52R/Xej4VVbKuRIodjiAhV0HR/XVbLbNrJhCZnzjnSjgMJ/dCdV0akQQxavX6hp/LC6rqLGLcXeQYU7XA==",
       "type": "package",
@@ -4020,10 +3946,6 @@
         "useSharedDesignerContext.txt"
       ]
     },
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
     "Oryxen.Application/1.0.0": {
       "type": "project",
       "path": "../Oryxen.Application/Oryxen.Application.csproj",
@@ -4041,22 +3963,12 @@
     }
   },
   "projectFileDependencyGroups": {
-<<<<<<< Updated upstream
     "net9.0": [
       "Microsoft.AspNetCore.Authentication.JwtBearer >= 9.0.10",
       "Microsoft.EntityFrameworkCore.Design >= 9.0.10",
       "Oryxen.Application >= 1.0.0",
       "Oryxen.Infrastructure >= 1.0.0",
       "Swashbuckle.AspNetCore >= 7.2.0"
-=======
-    "net10.0": [
-      "Microsoft.AspNetCore.OpenApi >= 10.0.9",
-      "Oryxen.Application >= 1.0.0",
-      "Oryxen.Infrastructure >= 1.0.0"
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
     ]
   },
   "packageFolders": {
@@ -4089,18 +4001,9 @@
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
-<<<<<<< Updated upstream
         "net9.0": {
           "framework": "net9.0",
           "targetAlias": "net9.0",
-=======
-        "net10.0": {
-          "framework": "net10.0",
-          "targetAlias": "net10.0",
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
           "projectReferences": {
             "D:\\Dev\\Proyectos\\Oryxen\\Oryxen-Backend\\src\\Oryxen.Application\\Oryxen.Application.csproj": {
               "projectPath": "D:\\Dev\\Proyectos\\Oryxen\\Oryxen-Backend\\src\\Oryxen.Application\\Oryxen.Application.csproj"

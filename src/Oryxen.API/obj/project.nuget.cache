@@ -1,14 +1,6 @@
 {
   "version": 2,
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
   "dgSpecHash": "R3UliJoL6jM=",
-=======
-  "dgSpecHash": "qobEucF0WOg=",
->>>>>>> Stashed changes
-=======
-  "dgSpecHash": "qobEucF0WOg=",
->>>>>>> Stashed changes
   "success": true,
   "projectFilePath": "D:\\Dev\\Proyectos\\Oryxen\\Oryxen-Backend\\src\\Oryxen.API\\Oryxen.API.csproj",
   "expectedPackageFiles": [
