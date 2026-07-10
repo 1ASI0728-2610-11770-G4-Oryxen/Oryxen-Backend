@@ -52,6 +52,18 @@ if (allowedOrigins is null || allowedOrigins.Length == 0)
     };
 }
 
+// Loopback origins are a development affordance; outside Development they would let any
+// page served from a developer machine call the deployed API with a real user's session.
+if (!builder.Environment.IsDevelopment())
+{
+    allowedOrigins = allowedOrigins.Where(origin => !IsLoopback(origin)).ToArray();
+}
+
+allowedOrigins = allowedOrigins
+    .Select(origin => origin.TrimEnd('/'))
+    .Distinct(StringComparer.OrdinalIgnoreCase)
+    .ToArray();
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(CorsPolicy, policy =>
@@ -59,6 +71,9 @@ builder.Services.AddCors(options =>
               .AllowAnyHeader()
               .AllowAnyMethod());
 });
+
+static bool IsLoopback(string origin) =>
+    Uri.TryCreate(origin, UriKind.Absolute, out var uri) && uri.IsLoopback;
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddHealthChecks();
@@ -90,6 +105,8 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 var app = builder.Build();
+
+app.Logger.LogInformation("CORS allow-list ({Count}): {Origins}", allowedOrigins.Length, string.Join(", ", allowedOrigins));
 
 // ---- Database migration on startup (dev convenience) -------------------------
 await ApplyMigrationsAsync(app);

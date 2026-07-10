@@ -32,9 +32,12 @@ services:
         value: "30"
       - key: Jwt__RefreshTokenDays
         value: "7"
-      # Add your real frontend origins after deploying Web (Vercel) and Landing (Firebase):
+      # Deployed frontend origins. These override the same indices in appsettings.json,
+      # which also lists the Vercel origin so a plain redeploy works without them.
+      # Loopback origins are stripped at startup when ASPNETCORE_ENVIRONMENT != Development.
       - key: Cors__AllowedOrigins__0
-        value: https://YOUR-WEB-APP.vercel.app
+        value: https://oryxen-web-application.vercel.app
+      # Replace once the Landing Page is deployed to Firebase Hosting:
       - key: Cors__AllowedOrigins__1
         value: https://YOUR-LANDING.web.app
       - key: GeminiVision__ApiKey
