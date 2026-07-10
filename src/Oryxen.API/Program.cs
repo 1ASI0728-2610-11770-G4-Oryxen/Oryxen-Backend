@@ -39,37 +39,54 @@ builder.Services
 
 builder.Services.AddAuthorization();
 
-// ---- CORS: explicit allow-list from configuration (no more allow-any) --------
-const string CorsPolicy = "OryxenFrontends";
-var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>();
-if (allowedOrigins is null || allowedOrigins.Length == 0)
-{
-    // Dev fallback: Vite dev/preview servers + Live Server for the landing page.
-    allowedOrigins = new[]
+// ---- CORS: explicit allow-list from configuration (never AllowAnyOrigin) -----
+const string CorsPolicyName = "OryxenCors";
+
+var configuredOrigins = builder.Configuration
+    .GetSection("Cors:AllowedOrigins")
+    .Get<string[]>() ?? [];
+
+// Vite dev/preview servers + Live Server for the landing page. Only outside a deployed
+// environment: they would otherwise let any page served from a developer machine call the
+// deployed API with a real user's session.
+var developmentOrigins = builder.Environment.IsDevelopment()
+    ? new[]
     {
-        "http://localhost:5173", "http://localhost:4173",
-        "http://127.0.0.1:5500", "http://localhost:5500"
-    };
-}
+        "http://localhost:5173",
+        "http://localhost:4173",
+        "http://localhost:5500",
+        "http://127.0.0.1:5500"
+    }
+    : [];
 
-// Loopback origins are a development affordance; outside Development they would let any
-// page served from a developer machine call the deployed API with a real user's session.
-if (!builder.Environment.IsDevelopment())
+// Deployed frontends, always allowed so a redeploy works without extra configuration.
+// The API's own origin (https://oryxen-backend.onrender.com) is deliberately absent:
+// it is the server, not a browser client.
+var productionOrigins = new[]
 {
-    allowedOrigins = allowedOrigins.Where(origin => !IsLoopback(origin)).ToArray();
-}
+    "https://oryxen-web-application.vercel.app",
+    "https://oryxen-landing.web.app",
+    "https://oryxen-landing.firebaseapp.com"
+};
 
-allowedOrigins = allowedOrigins
-    .Select(origin => origin.TrimEnd('/'))
+var allowedOrigins = configuredOrigins
+    .Concat(developmentOrigins)
+    .Concat(productionOrigins)
+    .Where(origin => !string.IsNullOrWhiteSpace(origin))
+    .Select(origin => origin.Trim().TrimEnd('/'))
+    .Where(origin => builder.Environment.IsDevelopment() || !IsLoopback(origin))
     .Distinct(StringComparer.OrdinalIgnoreCase)
     .ToArray();
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy(CorsPolicy, policy =>
-        policy.WithOrigins(allowedOrigins)
-              .AllowAnyHeader()
-              .AllowAnyMethod());
+    options.AddPolicy(CorsPolicyName, policy =>
+    {
+        policy
+            .WithOrigins(allowedOrigins)
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
 });
 
 static bool IsLoopback(string origin) =>
@@ -127,7 +144,7 @@ if (swaggerEnabled)
     });
 }
 
-app.UseCors(CorsPolicy);
+app.UseCors(CorsPolicyName);
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapHealthChecks("/health");

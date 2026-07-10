@@ -14,9 +14,16 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <!--
+      Npgsql.EntityFrameworkCore.PostgreSQL 9.0.4 only requires Relational >= 9.0.1, so consumers
+      that do not see the (PrivateAssets=all) Design package resolve 9.0.1 while this project
+      compiles against 9.0.10 -> MSB3277. Pinning it here as a public reference flows 9.0.10 to
+      every consumer and unifies the graph.
+    -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="9.0.10" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.10" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.10" />
-    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.10" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.10" />
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="9.0.10" />
     <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.1.2" />

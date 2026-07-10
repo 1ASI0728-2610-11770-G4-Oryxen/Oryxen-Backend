@@ -32,14 +32,16 @@ services:
         value: "30"
       - key: Jwt__RefreshTokenDays
         value: "7"
-      # Deployed frontend origins. These override the same indices in appsettings.json,
-      # which also lists the Vercel origin so a plain redeploy works without them.
-      # Loopback origins are stripped at startup when ASPNETCORE_ENVIRONMENT != Development.
+      # Deployed frontend origins. These override the same indices in appsettings.json.
+      # The API compiles the same origins into its allow-list, so a plain redeploy works
+      # even without them; loopback origins are stripped when ASPNETCORE_ENVIRONMENT
+      # != Development. Add further indices here for any extra frontend origin.
       - key: Cors__AllowedOrigins__0
         value: https://oryxen-web-application.vercel.app
-      # Replace once the Landing Page is deployed to Firebase Hosting:
       - key: Cors__AllowedOrigins__1
-        value: https://YOUR-LANDING.web.app
+        value: https://oryxen-landing.web.app
+      - key: Cors__AllowedOrigins__2
+        value: https://oryxen-landing.firebaseapp.com
       - key: GeminiVision__ApiKey
         sync: false
       - key: OpenWeatherMap__ApiKey
